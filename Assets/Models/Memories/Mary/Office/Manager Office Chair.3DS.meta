@@ -1,0 +1,111 @@
+fileFormatVersion: 2
+guid: 8395fc3d7e96fa1478fef4b2a162125e
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: HArmPads
+    100002: HBase
+    100004: HBFrmEdg
+    100006: HBkFrame
+    100008: HFrame
+    100010: //RootNode
+    100012: HPellBk
+    100014: HPellSt
+    100016: HSeatFrm
+    100018: HSFrmEdg
+    100020: HSpndle
+    400000: HArmPads
+    400002: HBase
+    400004: HBFrmEdg
+    400006: HBkFrame
+    400008: HFrame
+    400010: //RootNode
+    400012: HPellBk
+    400014: HPellSt
+    400016: HSeatFrm
+    400018: HSFrmEdg
+    400020: HSpndle
+    2300000: HArmPads
+    2300002: HBase
+    2300004: HBFrmEdg
+    2300006: HBkFrame
+    2300008: HFrame
+    2300010: HPellBk
+    2300012: HPellSt
+    2300014: HSeatFrm
+    2300016: HSFrmEdg
+    2300018: HSpndle
+    3300000: HArmPads
+    3300002: HBase
+    3300004: HBFrmEdg
+    3300006: HBkFrame
+    3300008: HFrame
+    3300010: HPellBk
+    3300012: HPellSt
+    3300014: HSeatFrm
+    3300016: HSFrmEdg
+    3300018: HSpndle
+    4300000: HArmPads
+    4300002: HBkFrame
+    4300004: HBFrmEdg
+    4300006: HBase
+    4300008: HFrame
+    4300010: HPellBk
+    4300012: HPellSt
+    4300014: HSeatFrm
+    4300016: HSFrmEdg
+    4300018: HSpndle
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .100000001
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
