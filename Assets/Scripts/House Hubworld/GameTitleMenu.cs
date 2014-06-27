@@ -19,6 +19,7 @@ public class GameTitleMenu : MonoBehaviour
 	private bool pressD = false;
 	private bool pressLeftClick = false;
 	private bool pressRightClick = false;
+
 	// Alpha values
 	private float wAlpha = 1;
 	private float aAlpha = 1;
@@ -42,8 +43,6 @@ public class GameTitleMenu : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		Debug.Log("Title Alpha: " + titleAlpha.ToString() + ", Exit Alpha: " + exitAlpha.ToString());
-
 		if (!pressW && Input.GetKeyDown(KeyCode.W))
 		{
 			pressW = true;
@@ -78,7 +77,6 @@ public class GameTitleMenu : MonoBehaviour
 		if (pressW && pressA && pressS && pressD && pressLeftClick && pressRightClick)
 		{
 			// Enable game
-			GameObject.Find("Player").GetComponent<PlayerGUI>().enabled = true;
 			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = true;
 			GameObject.Find("Player").GetComponent<MouseLook>().enabled = true;
 			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
@@ -99,7 +97,6 @@ public class GameTitleMenu : MonoBehaviour
 			titleAlpha = 1;
 
 			// Enable game
-			GameObject.Find("Player").GetComponent<PlayerGUI>().enabled = false;
 			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = false;
 			GameObject.Find("Player").GetComponent<MouseLook>().enabled = false;
 			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = false;
@@ -115,7 +112,6 @@ public class GameTitleMenu : MonoBehaviour
 			titleAlpha = 0;
 
 			// Enable game
-			GameObject.Find("Player").GetComponent<PlayerGUI>().enabled = true;
 			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = true;
 			GameObject.Find("Player").GetComponent<MouseLook>().enabled = true;
 			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
@@ -139,7 +135,7 @@ public class GameTitleMenu : MonoBehaviour
 		ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 50, 0, 100, 100), "The Museum", titleStyle, outColor, inColor, 1);
 
 		// Creator title
-		ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 50, 0, 100, 100), "A game by Sunil Rao", creatorStyle, outColor, inColor, 1);
+		//ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 50, 0, 100, 100), "A game by Sunil Rao", creatorStyle, outColor, inColor, 1);
 
 		inColor.a = instructionAlpha;
 		outColor.a = instructionAlpha;
@@ -182,32 +178,6 @@ public class GameTitleMenu : MonoBehaviour
 		GUI.DrawTexture(new Rect(Screen.width - 400, (Screen.height - 250), 100, 200), mouseTexture);
 		GUI.Label(new Rect(Screen.width - 385, (Screen.height - 250), 100, 200), "R", keyStyle);
 
-		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, exitAlpha);
-		GUIStyle buttonStyle = new GUIStyle("button");
-		buttonStyle.font = dearJoeFont;
-		buttonStyle.fontSize = 32;
 
-		// Exit buttons
-		if (GUI.Button(new Rect((Screen.width/2) - 60, (Screen.height/2) - 30 - 100, 120, 60), "Continue", buttonStyle))
-		{
-			exitAlpha = 0;
-			titleAlpha = 0;
-
-			// Enable game
-			GameObject.Find("Player").GetComponent<PlayerGUI>().enabled = true;
-			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = true;
-			GameObject.Find("Player").GetComponent<MouseLook>().enabled = true;
-			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
-			GameObject.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
-			GameObject.Find("Main Camera").GetComponent<CameraZoom>().enabled = true;
-		}
-		if (GUI.Button(new Rect((Screen.width/2) - 60, (Screen.height/2) - 30, 120, 60), "Options", buttonStyle))
-		{
-			// TODO: Options menu
-		}
-		if (GUI.Button(new Rect((Screen.width/2) - 60, (Screen.height/2) - 30 + 100, 120, 60), "Exit", buttonStyle))
-		{
-			Application.Quit();
-		}
 	}
 }

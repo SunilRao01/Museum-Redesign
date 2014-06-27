@@ -73,6 +73,7 @@ public class PlayerGUI : MonoBehaviour
 			Screen.showCursor = false;
 		}
 
+		// Handle start menu
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
 			Screen.lockCursor = false;
@@ -93,7 +94,6 @@ public class PlayerGUI : MonoBehaviour
 			
 			currentWords.color = newColor;
 		}
-
 	}
 
 	void OnGUI()
@@ -189,14 +189,10 @@ public class PlayerGUI : MonoBehaviour
 			
 			if (GUI.Button(new Rect(tempBlock.x, tempBlock.y, 120, 60), wordsInventory[i].ToString(), buttonStyle))
 			{
-				Debug.Log("Player has pressed button: " + wordsInventory[i].ToString());
 
 				// TODO: Process button selection
 				string sceneName = Application.loadedLevelName;
 				string tempWordInv = wordsInventory[i].ToString();
-
-
-
 
 				//**********************
 				// HANDLE MATCH PAIRING
@@ -221,6 +217,17 @@ public class PlayerGUI : MonoBehaviour
 						if (tempWordInv == "Rage")
 						{
 
+							GetComponent<Player>().removeWord(i);
+							GetComponent<Player>().zenUp();
+
+							// Make player move to designated area
+							GetComponent<MaryOfficeInteractions>().startInteraction(selectedObject);
+						}
+					}
+					else if (selectedObject == "PlantManager")
+					{
+						if (tempWordInv == "Pollution")
+						{
 							GetComponent<Player>().removeWord(i);
 							GetComponent<Player>().zenUp();
 

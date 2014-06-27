@@ -23,12 +23,25 @@ public class Door : MonoBehaviour
 	private Vector3 closeRotation;
 	private Vector3 openRotation;
 
+	public bool exit;
+	public bool portal;
+	public string accessPoint;
+
+	private GameObject mainCamera;
+
 	// Use this for initialization
 	void Start () 
 	{
 		closeRotation = transform.rotation.eulerAngles;
 
-		openRotation = new Vector3(0, 255, 0);
+		openRotation = new Vector3(0, closeRotation.y + 255, 0);
+
+		if (exit)
+		{
+			openRotation = new Vector3(0, closeRotation.y - 255, 0);
+		}
+
+		mainCamera = GameObject.Find("Main Camera");
 	}
 	
 	// Update is called once per frame
@@ -52,8 +65,18 @@ public class Door : MonoBehaviour
 
 		if (canOpen && Input.GetKeyDown(KeyCode.E))
 		{
+			audio.Play();
+
 			iTween.RotateTo(gameObject, doorRotation, doorSpeed);
 			//audio.Play();
+
+			if (portal)
+			{
+				PlayerPrefs.SetString("PreviousScene", Application.loadedLevelName.ToString());
+
+				mainCamera.GetComponent<FadeOut>().nextScene = accessPoint;
+				mainCamera.GetComponent<FadeOut>().fade = true;
+			}
 		}
 	}
 

@@ -56,6 +56,9 @@ public class FirstPersonDrifter: MonoBehaviour
 	public bool lockMovement = false;
 
 	public bool isMoving;
+
+	private bool walkCheck = false;
+	public float walkSoundInterval;
  
     void Start()
     {
@@ -96,9 +99,9 @@ public class FirstPersonDrifter: MonoBehaviour
                     FallingDamageAlert (fallStartLevel - myTransform.position.y);
             }
  
-            if( enableRunning )
+            if ( enableRunning )
             {
-            	speed = Input.GetButton("Run")? runSpeed : walkSpeed;
+            	speed = Input.GetButton("Run") ? runSpeed : walkSpeed;
             }
  
             // If sliding (and it's allowed), or if we're on an object tagged "Slide", get a vector pointing down the slope we're on
@@ -148,21 +151,61 @@ public class FirstPersonDrifter: MonoBehaviour
 	        grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
 		}
 
-		if (controller.velocity.magnitude > 0)
+		if ((Input.GetAxisRaw("Horizontal") != 0) || (Input.GetAxisRaw("Vertical") != 0))
 		{
-			isMoving = true;
+			if (!walkCheck)
+			{
+				StartCoroutine("footstepSound");
+			}
 
-			//GameObject.Find("Player").GetComponent<MouseLook>().enabled = true;
-			//GameObject.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
-
-			// Change button alpha back to 0
-			//GameObject.Find("Player").GetComponent<PlayerGUI>().buttonAlpha = 0;
+			walkCheck = true;
 		}
 		else
 		{
+			if (walkCheck)
+			{
+				StopCoroutine("footstepSound");
+			}
+
+			walkCheck = false;
+		}
+
+
+		if (controller.velocity.magnitude > 0)
+		{
+			isMoving = true;
+		}
+		else
+		{
+
 			isMoving = false;
 		}
+
+
     }
+
+	void Update()
+	{
+		if (Input.GetButtonDown("Run"))
+		{
+			walkSoundInterval -= 0.1f;
+		}
+		if (Input.GetButtonUp("Run"))
+		{
+			walkSoundInterval += 0.1f;
+		}
+	}
+
+
+	IEnumerator footstepSound()
+	{
+		while (true)
+		{
+			audio.Play();
+			yield return new WaitForSeconds(walkSoundInterval);
+		}
+
+	}
  
     // Store point that we're in contact with for use in FixedUpdate if needed
     void OnControllerColliderHit (ControllerColliderHit hit) {

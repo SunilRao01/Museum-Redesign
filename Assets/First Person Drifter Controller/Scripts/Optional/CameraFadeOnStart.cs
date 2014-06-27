@@ -7,7 +7,7 @@ public class CameraFadeOnStart : MonoBehaviour
 {
 	public bool fadeInWhenSceneStarts = true;
 	public Color fadeColor = Color.black;
-	public float fadeTime = 5f;
+	private float fadeTime = 3f;
 
 	void Awake ()
 	{

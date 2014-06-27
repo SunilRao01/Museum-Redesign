@@ -38,7 +38,7 @@ public class MouseSelection : MonoBehaviour
 			renderer.material.shader = Shader.Find("Diffuse");
 			onObject = false;
 		}
-		else if (onObject && Input.GetMouseButtonDown(0) && !player.GetComponent<FirstPersonDrifter>().isMoving)
+		else if (onObject && Input.GetMouseButtonDown(0) && !playerDrifter.isMoving)
 		{
 			player.GetComponent<PlayerGUI>().mouseAlpha = 0;
 			lockOn = true;
