@@ -58,7 +58,9 @@ public class FirstPersonDrifter: MonoBehaviour
 	public bool isMoving;
 
 	private bool walkCheck = false;
-	public float walkSoundInterval;
+	private float walkSoundInterval = 0.4f;
+
+	public AudioSource footAudio;
  
     void Start()
     {
@@ -151,7 +153,7 @@ public class FirstPersonDrifter: MonoBehaviour
 	        grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
 		}
 
-		if ((Input.GetAxisRaw("Horizontal") != 0) || (Input.GetAxisRaw("Vertical") != 0))
+		if (((Input.GetAxisRaw("Horizontal") != 0) || (Input.GetAxisRaw("Vertical") != 0)) && lockMovement == false)
 		{
 			if (!walkCheck)
 			{
@@ -201,7 +203,7 @@ public class FirstPersonDrifter: MonoBehaviour
 	{
 		while (true)
 		{
-			audio.Play();
+			footAudio.Play();
 			yield return new WaitForSeconds(walkSoundInterval);
 		}
 

@@ -3,23 +3,29 @@ using System.Collections;
 
 public class TransitionBarrier : MonoBehaviour 
 {
+	public bool lockBarrier;
+	private Player player;
+
 	void Start () 
 	{
-	
+		player = GameObject.Find("Player").GetComponent<Player>();
 	}
 	
 	void Update () 
 	{
-	
-	}
-
-	void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.CompareTag("Player"))
+		if (lockBarrier)
 		{
+			GetComponent<BoxCollider>().isTrigger = false;
+		}
+		else
+		{
+			GetComponent<BoxCollider>().isTrigger = true;
+		}
 
-			// Play new music
-			audio.Play();
+		if (player.zen >= int.Parse(transform.GetChild(0).GetComponent<TextMesh>().text))
+		{
+			lockBarrier = false;
+			GetComponent<ParticleAnimator>().doesAnimateColor = false;
 		}
 	}
 }

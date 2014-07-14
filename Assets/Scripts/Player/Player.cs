@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
 	public int maxBossHealth;
 
 	// Game Menu
-	private float gameMenuAlpha;
+	public float gameMenuAlpha;
 	public GUIStyle tabStyle;
 	public GUIStyle progressStyle;
 	private float progressionAlpha;
@@ -28,14 +28,14 @@ public class Player : MonoBehaviour
 	private float xOffset = 158;
 	private float yOffset = 167;
 
-	private float exitAlpha;
+	public float exitAlpha;
 	public GUIStyle titleStyle;
 	public GUIStyle memoryLabelStyle;
 	public GUIStyle progressionPercentageStyle;
 	public GUIStyle progressionNameStyle;
 	public GUIStyle progressionPaintingStyle;
 	public GUIStyle progressionObstacleStyle;
-
+	
 	void Awake () 
 	{
 		currentWords = new ArrayList();
@@ -43,12 +43,9 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-		Screen.lockCursor = true;
-		Screen.showCursor = false;
-
-		addWord("Blocks");
+		addWord("Happy");
 		addWord("Rage");
-		addWord("Pollution");
+		addWord("Compassion");
 	}
 	
 	void OnGUI()
@@ -58,15 +55,15 @@ public class Player : MonoBehaviour
 		GUIStyle buttonStyle = new GUIStyle("button");
 		buttonStyle.font = memoryGridFont;
 		buttonStyle.fontSize = 16;
-		
+
 		// Exit buttons
 		if (GUI.Button(new Rect((Screen.width/2) - 60, (Screen.height/2) - 30 - 100, 120, 60), "Continue", buttonStyle))
 		{
 			exitAlpha = 0;
 
 			// Enable game
-			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = true;
-			GameObject.Find("Player").GetComponent<MouseLook>().enabled = true;
+			GetComponent<FirstPersonDrifter>().enabled = true;
+			GetComponent<MouseLook>().enabled = true;
 			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
 			GameObject.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
 			GameObject.Find("Main Camera").GetComponent<CameraZoom>().enabled = true;
@@ -74,6 +71,9 @@ public class Player : MonoBehaviour
 			// Hide and lock mouse
 			Screen.lockCursor = true;
 			Screen.showCursor = false;
+
+			Time.timeScale = 1;
+			GetComponent<PlayerGUI>().crosshairAlpha = 1;
 		}
 		if (GUI.Button(new Rect((Screen.width/2) - 60, (Screen.height/2) - 30, 120, 60), "Options", buttonStyle))
 		{
@@ -178,17 +178,40 @@ public class Player : MonoBehaviour
 		// Exit Menu
 		if (Input.GetKeyDown(KeyCode.Escape) && exitAlpha == 0)
 		{
+
+
 			exitAlpha = 1;
 
 			// Enable game
-			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = false;
-			GameObject.Find("Player").GetComponent<MouseLook>().enabled = false;
+			GetComponent<FirstPersonDrifter>().enabled = false;
+			GetComponent<MouseLook>().enabled = false;
 			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = false;
 			GameObject.Find("Main Camera").GetComponent<MouseLook>().enabled = false;
 			GameObject.Find("Main Camera").GetComponent<CameraZoom>().enabled = false;
 			
 			Screen.lockCursor = false;
 			Screen.showCursor = true;
+
+			Time.timeScale = 0;
+			GetComponent<PlayerGUI>().crosshairAlpha = 0;
+		}
+		else if (Input.GetKeyDown(KeyCode.Escape) && exitAlpha == 1)
+		{
+			exitAlpha = 0;
+			
+			// Enable game
+			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = true;
+			GameObject.Find("Player").GetComponent<MouseLook>().enabled = true;
+			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
+			GameObject.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
+			GameObject.Find("Main Camera").GetComponent<CameraZoom>().enabled = true;
+			
+			// Hide and lock mouse
+			Screen.lockCursor = true;
+			Screen.showCursor = false;
+
+			Time.timeScale = 1;
+			GetComponent<PlayerGUI>().crosshairAlpha = 1;
 		}
 
 		if (Input.GetKeyDown(KeyCode.Tab))
@@ -204,12 +227,15 @@ public class Player : MonoBehaviour
 				GetComponent<FirstPersonDrifter>().lockMovement = true;
 				GetComponent<MouseLook>().enabled = false;
 				transform.Find("Main Camera").GetComponent<MouseLook>().enabled = false;
-				transform.Find("Main Camera").GetComponent<LockMouse>().enabled = false;
+				transform.Find("Main Camera").GetComponent<HeadBob>().enabled = false;
 
 				if (Application.loadedLevelName == "HouseHub")
 				{
 					GetComponent<HubworldPlayer>().mouseAlpha = 0;
 				}
+
+				Time.timeScale = 0;
+				GetComponent<PlayerGUI>().crosshairAlpha = 0;
 			}
 			else
 			{
@@ -223,12 +249,15 @@ public class Player : MonoBehaviour
 				GetComponent<FirstPersonDrifter>().lockMovement = false;
 				GetComponent<MouseLook>().enabled = true;
 				transform.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
-				transform.Find("Main Camera").GetComponent<LockMouse>().enabled = true;
+				transform.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
 
 				if (Application.loadedLevelName == "HouseHub")
 				{
 					GetComponent<HubworldPlayer>().mouseAlpha = 1;
 				}
+
+				Time.timeScale = 1;
+				GetComponent<PlayerGUI>().crosshairAlpha = 1;
 			}
 		}
 	}
@@ -243,7 +272,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	// Show effect when adding zen
+	// Show effect (on PAINTING) when adding zen
 	public void addZen(ref int currentZen)
 	{
 		currentZen++;
@@ -252,6 +281,9 @@ public class Player : MonoBehaviour
 	public void zenUp()
 	{
 		zen++;
+
+		// Emit particle effect
+		transform.GetChild(0).GetChild(0).particleSystem.Emit(100);
 	}
 
 	// TODO: Show effects when adding/remove words

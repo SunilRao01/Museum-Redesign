@@ -8,7 +8,6 @@ public class Painting : MonoBehaviour
 	private Player player;
 	private FirstPersonDrifter playerMovement;
 	private Camera mainCamera;
-	private MuseumInfo museumInformation;
 
 	// Alpha
 	private float promptAlpha;
@@ -38,16 +37,17 @@ public class Painting : MonoBehaviour
 	private bool hasEntered;
 	private bool allComplete;
 
-	public bool actionPainting;
-
+	// Painting Visual Progression
 	public float particleBlock;
+
+	// Level Information
+	private LevelInformation levelProgress;
 	
 	void Start ()
 	{
 		player = GameObject.Find("Player").GetComponent<Player>();
 		playerMovement = GameObject.Find("Player").GetComponent<FirstPersonDrifter>();
 		mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-		//museumInformation = GameObject.Find("Museum Information").GetComponent<MuseumInfo>();
 
 		allComplete = false;
 		renderer.material = painting;
@@ -64,11 +64,13 @@ public class Painting : MonoBehaviour
 		// Particle effects
 		// MAX: 2
 		particleBlock = 2.0f / maxZen;
+
+		levelProgress = GameObject.Find("Level Information").GetComponent<LevelInformation>();
+		textMaterial.color = new Color(textMaterial.color.r, textMaterial.color.g, textMaterial.color.b, 0);
 	}
 	
 	void Update ()
 	{		
-		
 		// Puts all player input into 3d text
 		foreach (char c in Input.inputString)
 		{
@@ -115,6 +117,11 @@ public class Painting : MonoBehaviour
 				promptText = "Painting complete press Shift to exit";
 				promptStyle.normal.textColor = Color.white;
 				player.addWord(paintingIdea);
+
+				levelProgress.currentPaintings++;
+
+				iTween.ScaleTo(transform.GetChild(1).gameObject, iTween.Hash("scale", new Vector3(0.23f, 0.05f, 1.14f), "time", 1, "easetype", iTween.EaseType.easeOutElastic));
+				StartCoroutine(fadePlatformOut());
 			}
 
 			allComplete = true;
@@ -139,14 +146,17 @@ public class Painting : MonoBehaviour
 				{
 					if (canType)
 					{
-						//textInput.color = Color.grey;
 						canType = false;
 					}
 					else if (!canType)
 					{
-						//textInput.color = Color.black;
 						promptText = "Press shift to exit";
 						canType = true;
+
+						// Normal size scale: (0.72, 0.16, 3.59)
+						// Small size scale: (0.23, 0.05, 1.14)
+						iTween.ScaleTo(transform.GetChild(1).gameObject, iTween.Hash("scale", new Vector3(0.72f, 0.16f, 3.59f), "time", 1, "easetype", iTween.EaseType.easeOutElastic));
+						StartCoroutine(fadePlatformIn());
 					}
 
 					if (playerMovement.lockMovement)
@@ -155,13 +165,16 @@ public class Painting : MonoBehaviour
 						mainCamera.GetComponent<HeadBob>().enableBob = true;
 						promptText = "Press shift to interpret";
 						textInput.text = "";
-						player.GetComponent<PlayerGUI>().mouseAlpha = 1;
+						player.GetComponent<PlayerGUI>().crosshairAlpha = 1;
+
+						iTween.ScaleTo(transform.GetChild(1).gameObject, iTween.Hash("scale", new Vector3(0.23f, 0.05f, 1.14f), "time", 1, "easetype", iTween.EaseType.easeOutElastic));
+						StartCoroutine(fadePlatformOut());
 					}
 					else
 					{
 						playerMovement.lockMovement = true;
 						mainCamera.GetComponent<HeadBob>().enableBob = false;
-						player.GetComponent<PlayerGUI>().mouseAlpha = 0;
+						player.GetComponent<PlayerGUI>().crosshairAlpha = 0;
 					}
 					
 					promptAlpha = 0;
@@ -171,18 +184,10 @@ public class Painting : MonoBehaviour
 				{
 					playerMovement.lockMovement = false;
 					mainCamera.GetComponent<HeadBob>().enableBob = true;
-					promptAlpha = 0;	
+					promptAlpha = 0;
 					promptText = "";
 
-					// Check if painting is main painting for level completion
-					if (transform.parent != null)
-					{
-						if (transform.parent.name == "Mission Paintings")
-						{
-							// Add to main mission paiting number
-							//museumInformation.mainPaintings++;
-						}
-					}
+
 				}
 					
 
@@ -202,6 +207,29 @@ public class Painting : MonoBehaviour
 		}
 	}
 	
+	IEnumerator fadePlatformIn()
+	{
+		Color newColor = Color.white;
+		newColor.a = 0;
+		while (newColor.a < 1)
+		{
+			newColor.a += 0.1f;
+			textMaterial.color = newColor;
+			yield return new WaitForSeconds(0.01f);
+		}
+	}
+
+	IEnumerator fadePlatformOut()
+	{
+		Color newColor = Color.white;
+		newColor.a = 1;
+		while (newColor.a > 0)
+		{
+			newColor.a -= 0.1f;
+			textMaterial.color = newColor;
+			yield return new WaitForSeconds(0.01f);
+		}
+	}
 	
 	void OnTriggerEnter(Collider other)
 	{
@@ -254,7 +282,7 @@ public class Painting : MonoBehaviour
 		for (int i = 0; i < validWords.Length; i++)
 		{
 			// If input is a valid interpretation
-			if (text == validWords[i])
+			if (text == validWords[i] || (text[text.Length-1] == 's' && text.Substring(0, text.Length-1) == validWords[i]))
 			{
 				processedWords.Add(validWords[i]);
 				player.addZen(ref currentZen);
@@ -262,12 +290,12 @@ public class Painting : MonoBehaviour
 				// Remove element from array
 				validWords = validWords.Where(w => w != validWords[i]).ToArray();
 
-				// Increase particle energy
-				GetComponentInChildren<ParticleEmitter>().maxEnergy += particleBlock;
+
+				//GetComponentInChildren<ParticleEmitter>().maxEnergy += particleBlock;
 
 				return;
 			}
-			
+
 		}
 	}
 	

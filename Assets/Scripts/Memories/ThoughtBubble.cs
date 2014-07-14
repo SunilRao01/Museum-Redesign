@@ -4,16 +4,29 @@ using System.Collections;
 public class ThoughtBubble : MonoBehaviour 
 {
 	// Thought texts
-	public GameObject[] thoughtTexts;
+	private GameObject[] thoughtTexts;
+	private int thoughtCount = 0;
 
 	void Start () 
 	{
-	
+		thoughtTexts = new GameObject[2];
+		Transform[] allChildren = GetComponentsInChildren<Transform>();
+
+		foreach (Transform child in allChildren)
+		{
+			if (child.gameObject.name == "Text")
+			{
+				thoughtTexts[thoughtCount] = child.gameObject;
+				thoughtCount++;
+			}
+		}
+
+		thoughtCount = 0;
 	}
 	
 	void Update () 
 	{
-	
+		
 	}
 
 	public void transitionThought(string newThought)
@@ -38,7 +51,14 @@ public class ThoughtBubble : MonoBehaviour
 			}
 			if (i == (newThought.Length-1))
 			{
-				thoughtTexts[thoughtCount].GetComponent<TextMesh>().text = newThought.Substring((tempPosition + 1), (i - tempPosition));
+				if (thoughtCount > 0)
+				{
+					thoughtTexts[thoughtCount].GetComponent<TextMesh>().text = newThought.Substring((tempPosition + 1), (i - tempPosition));
+				}
+				else
+				{
+					thoughtTexts[thoughtCount].GetComponent<TextMesh>().text = newThought.Substring((tempPosition), (i - (tempPosition-1)));
+				}
 				thoughtCount++;
 			}
 		}

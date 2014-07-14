@@ -17,8 +17,8 @@ public class HubworldPlayer : MonoBehaviour
 
 	void Start () 
 	{
+		Screen.lockCursor = true;
 		Screen.showCursor = false;
-		Screen.lockCursor = false;
 
 		mainCamera = GameObject.Find("Main Camera");
 	}
@@ -52,7 +52,6 @@ public class HubworldPlayer : MonoBehaviour
 
 		if (other.gameObject.CompareTag("Memory Trigger"))
 		{
-			enterMemory = true;
 			promptAlpha = 1;
 
 			// Check which memory trigger
@@ -62,13 +61,15 @@ public class HubworldPlayer : MonoBehaviour
 				case "TED":
 					nextMemory = "MemoryHub_Mary";
 					break;
-			case "Itenerary":
+				case "GraduationHat":
 					nextMemory = "IntroductionMemoryHub";
 					break;
 				default:
 					break;
 
 			}
+
+			enterMemory = true;
 		}
 	}
 

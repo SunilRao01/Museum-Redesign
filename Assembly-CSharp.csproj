@@ -79,14 +79,16 @@
      <Compile Include="Assets\Scripts\Memories\EndZone.cs" />
      <Compile Include="Assets\Scripts\Memories\Introduction\EndPit.cs" />
      <Compile Include="Assets\Scripts\Memories\Introduction\IntroductionInteractions.cs" />
+     <Compile Include="Assets\Scripts\Memories\LevelInformation.cs" />
      <Compile Include="Assets\Scripts\Memories\Mary\MaryOfficeInteractions.cs" />
      <Compile Include="Assets\Scripts\Memories\Mary\TransitionBarrier.cs" />
      <Compile Include="Assets\Scripts\Memories\MemoryDialogue.cs" />
+     <Compile Include="Assets\Scripts\Memories\TestText.cs" />
      <Compile Include="Assets\Scripts\Memories\ThoughtBubble.cs" />
+     <Compile Include="Assets\Scripts\Memories\ZenParticles.cs" />
      <Compile Include="Assets\Scripts\Memory Hub\Door.cs" />
      <Compile Include="Assets\Scripts\Memory Hub\DoorLabel.cs" />
      <Compile Include="Assets\Scripts\MouseSelection.cs" />
-     <Compile Include="Assets\Scripts\Museums\MuseumInfo.cs" />
      <Compile Include="Assets\Scripts\Overworld ROY\Monologue.cs" />
      <Compile Include="Assets\Scripts\Overworld\Car.cs" />
      <Compile Include="Assets\Scripts\Overworld\Prompt.cs" />
@@ -123,6 +125,7 @@
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
      <None Include="Assets\Shaders\3DText.shader" />
+     <None Include="Assets\Shaders\AlphaSelfIllum.shader" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">

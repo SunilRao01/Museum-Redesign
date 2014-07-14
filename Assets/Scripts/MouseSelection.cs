@@ -6,29 +6,30 @@ public class MouseSelection : MonoBehaviour
 	public bool lockOn = false;
 	private GameObject player;
 	private FirstPersonDrifter playerDrifter;
+	private LevelInformation levelProgress;
 
 	public bool onObject;
-	private Texture2D mouseCursor;
 
 	// Use this for initialization
 	void Start () 
 	{
 		player = GameObject.Find("Player");
 		playerDrifter = player.GetComponent<FirstPersonDrifter>();
+		player.GetComponent<PlayerGUI>().wordsAlpha = 1;
 
+		levelProgress = GameObject.Find("Level Information").GetComponent<LevelInformation>();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		mouseCursor = GameObject.Find("Player").GetComponent<PlayerGUI>().mouseTexture;
-
-		if (playerDrifter.isMoving)
+		// TODO: Figure out a way to hide mouse when needed and while still moving (aka the end pit)
+		if (playerDrifter.isMoving && !levelProgress.levelComplete)
 		{
 			lockOn = false;
 			renderer.material.shader = Shader.Find("Diffuse");
 			onObject = false;
-			player.GetComponent<PlayerGUI>().mouseAlpha = 1;
+			player.GetComponent<PlayerGUI>().crosshairAlpha = 1;
 			player.GetComponent<PlayerGUI>().wordsAlpha = 1;
 		}
 
@@ -40,7 +41,7 @@ public class MouseSelection : MonoBehaviour
 		}
 		else if (onObject && Input.GetMouseButtonDown(0) && !playerDrifter.isMoving)
 		{
-			player.GetComponent<PlayerGUI>().mouseAlpha = 0;
+			player.GetComponent<PlayerGUI>().crosshairAlpha = 0;
 			lockOn = true;
 			player.GetComponent<PlayerGUI>().buttonAlpha = 1;
 			player.GetComponent<PlayerGUI>().selectedObject = gameObject.name;
@@ -55,27 +56,15 @@ public class MouseSelection : MonoBehaviour
 			// Should display cursor
 			Screen.lockCursor = false;
 			Screen.showCursor = true;
-			Debug.Log("Process player and " + gameObject.name + " interaction.");
 		}
 	}
 
 	// TODO: Change color of cursor when object is selectable
 	void OnMouseOver()
 	{
-		Debug.Log("Hovering over " + gameObject.name);
 		onObject = true;
 
 		renderer.material.shader = Shader.Find("Custom/OutlinedDiffuse");
-
-		// Change cursor color
-		Color[] pixes = mouseCursor.GetPixels();
-		
-		for (int i = 0; i < pixes.Length; i++)
-		{
-			pixes[i] = Color.grey;
-		}
-		
-		mouseCursor.SetPixels(pixes);
 	}
 
 	void OnMouseExit()
@@ -86,15 +75,5 @@ public class MouseSelection : MonoBehaviour
 		{
 			renderer.material.shader = Shader.Find("Diffuse");
 		}
-
-		// Revert cursor color
-		Color[] pixes = mouseCursor.GetPixels();
-
-		for (int i = 0; i < pixes.Length; i++)
-		{
-			pixes[i] = Color.white;
-		}
-
-		mouseCursor.SetPixels(pixes);
 	}
 }

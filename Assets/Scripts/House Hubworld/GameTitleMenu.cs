@@ -10,7 +10,6 @@ public class GameTitleMenu : MonoBehaviour
 	private float titleAlpha = 1;
 	private float instructionAlpha = 1;
 	private float instructionKeyAlpha = 0.5f;
-	private float exitAlpha = 0;
 
 	// Key booleans
 	private bool pressW = false;
@@ -37,7 +36,8 @@ public class GameTitleMenu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-
+		Screen.lockCursor = true;
+		Screen.showCursor = false;
 	}
 	
 	// Update is called once per frame
@@ -89,38 +89,6 @@ public class GameTitleMenu : MonoBehaviour
 
 			pressW = false;
 		}
-
-		// Exit Menu
-		if (Input.GetKeyDown(KeyCode.Escape) && exitAlpha == 0)
-		{
-			exitAlpha = 1;
-			titleAlpha = 1;
-
-			// Enable game
-			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = false;
-			GameObject.Find("Player").GetComponent<MouseLook>().enabled = false;
-			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = false;
-			GameObject.Find("Main Camera").GetComponent<MouseLook>().enabled = false;
-			GameObject.Find("Main Camera").GetComponent<CameraZoom>().enabled = false;
-
-			Screen.lockCursor = false;
-			Screen.showCursor = true;
-		}
-		else if (Input.GetKeyDown(KeyCode.Escape) && exitAlpha == 1)
-		{
-			exitAlpha = 0;
-			titleAlpha = 0;
-
-			// Enable game
-			GameObject.Find("Player").GetComponent<FirstPersonDrifter>().enabled = true;
-			GameObject.Find("Player").GetComponent<MouseLook>().enabled = true;
-			GameObject.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
-			GameObject.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
-			GameObject.Find("Main Camera").GetComponent<CameraZoom>().enabled = true;
-
-			Screen.lockCursor = true;
-			Screen.showCursor = false;
-		}
 	}
 
 	void OnGUI()
@@ -170,13 +138,13 @@ public class GameTitleMenu : MonoBehaviour
 
 		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, lcAlpha);
 		// Left Click Mouse
-		GUI.DrawTexture(new Rect(Screen.width - 600, (Screen.height - 250), 100, 200), mouseTexture);
-		GUI.Label(new Rect(Screen.width - 625, (Screen.height - 250), 100, 200), "L", keyStyle);
+		GUI.DrawTexture(new Rect(Screen.width - 400, (Screen.height - 250), 100, 200), mouseTexture);
+		GUI.Label(new Rect(Screen.width - 425, (Screen.height - 250), 100, 200), "L", keyStyle);
 
 		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, rcAlpha);
 		// Right Click Mouse
-		GUI.DrawTexture(new Rect(Screen.width - 400, (Screen.height - 250), 100, 200), mouseTexture);
-		GUI.Label(new Rect(Screen.width - 385, (Screen.height - 250), 100, 200), "R", keyStyle);
+		GUI.DrawTexture(new Rect(Screen.width - 200, (Screen.height - 250), 100, 200), mouseTexture);
+		GUI.Label(new Rect(Screen.width - 185, (Screen.height - 250), 100, 200), "R", keyStyle);
 
 
 	}

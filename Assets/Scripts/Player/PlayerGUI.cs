@@ -23,7 +23,7 @@ public class PlayerGUI : MonoBehaviour
 	private GUIStyle buttonStyle;
 	public GUIText currentWords;
 
-	public float mouseAlpha = 1;
+	public float crosshairAlpha = 1;
 
 	private float zen;
 	private string words;
@@ -38,18 +38,24 @@ public class PlayerGUI : MonoBehaviour
 	// Boss sections
 	public string selectedPower;
 
+	// SFX
+	public AudioSource rightIdea;
+	public AudioSource wrongIdea;
 
+	// Level Information
+	private LevelInformation levelProgress;
 
 	void Start () 
 	{
 		Screen.lockCursor = true;
-		//Screen.showCursor = false;
+		Screen.showCursor = false;
 
 		wordsInventory = GetComponent<Player>().currentWords;
 		playerDrifter = GetComponent<FirstPersonDrifter>();
 		zen = GetComponent<Player>().zen;
 		words = GetComponent<Player>().words;
 
+		levelProgress = GameObject.Find("Level Information").GetComponent<LevelInformation>();
 	}
 	
 	void Update () 
@@ -67,17 +73,11 @@ public class PlayerGUI : MonoBehaviour
 			transform.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
 		}
 
-		if (Input.GetMouseButtonDown(0) && buttonAlpha == 0)
+		if (Input.GetMouseButtonDown(0) && buttonAlpha == 0 && GetComponent<Player>().exitAlpha == 0 
+		    && GetComponent<Player>().gameMenuAlpha == 0)
 		{
 			Screen.lockCursor = true;
 			Screen.showCursor = false;
-		}
-
-		// Handle start menu
-		if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			Screen.lockCursor = false;
-			Screen.showCursor = true;
 		}
 
 		if (buttonAlpha == 0)
@@ -151,7 +151,7 @@ public class PlayerGUI : MonoBehaviour
 
 
 		// Show mouse
-		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, mouseAlpha);
+		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, crosshairAlpha);
 		
 		GUI.DrawTexture(new Rect((Screen.width/2) - 8, (Screen.height/2) - 8, 16, 16), mouseTexture, ScaleMode.ScaleToFit);
 
@@ -187,7 +187,7 @@ public class PlayerGUI : MonoBehaviour
 				tempBlock.y = Screen.height - yButtonPosition;
 			}
 			
-			if (GUI.Button(new Rect(tempBlock.x, tempBlock.y, 120, 60), wordsInventory[i].ToString(), buttonStyle))
+			if (GUI.Button(new Rect(tempBlock.x, tempBlock.y, 140, 60), wordsInventory[i].ToString(), buttonStyle))
 			{
 
 				// TODO: Process button selection
@@ -198,6 +198,9 @@ public class PlayerGUI : MonoBehaviour
 				// HANDLE MATCH PAIRING
 				//**********************
 
+				// NOTE: Use unique interaction script to 
+				// activate any physical movements, etc.
+
 				if (sceneName == "OfficeMemory")
 				{
 					// Physical object solutions
@@ -205,9 +208,9 @@ public class PlayerGUI : MonoBehaviour
 					{
 						if (tempWordInv == "Water")
 						{
-
 							GetComponent<Player>().removeWord(i);
 							GetComponent<Player>().zenUp();
+							rightIdea.Play();
 						}
 					}
 
@@ -219,6 +222,7 @@ public class PlayerGUI : MonoBehaviour
 
 							GetComponent<Player>().removeWord(i);
 							GetComponent<Player>().zenUp();
+							rightIdea.Play();
 
 							// Make player move to designated area
 							GetComponent<MaryOfficeInteractions>().startInteraction(selectedObject);
@@ -230,11 +234,68 @@ public class PlayerGUI : MonoBehaviour
 						{
 							GetComponent<Player>().removeWord(i);
 							GetComponent<Player>().zenUp();
+							rightIdea.Play();
 
 							// Make player move to designated area
 							GetComponent<MaryOfficeInteractions>().startInteraction(selectedObject);
 						}
 					}
+				}
+				else if (sceneName == "IntroductionMemory")
+				{
+					if (selectedObject == "SpecialBully")
+					{
+						if (tempWordInv == "Rage")
+						{
+							GetComponent<Player>().removeWord(i);
+
+							wrongIdea.Play();
+						}
+						else if (tempWordInv == "Happy")
+						{
+							GetComponent<Player>().removeWord(i);
+							GetComponent<Player>().zenUp();
+
+							rightIdea.Play();
+							levelProgress.currentObstacles++;
+						}
+						else if (tempWordInv == "Compassion")
+						{
+							GetComponent<Player>().removeWord(i);
+							GetComponent<Player>().zenUp();
+
+							rightIdea.Play();
+							levelProgress.currentObstacles++;
+						}
+
+					}
+					else if (selectedObject == "SpecialKid")
+					{
+						if (tempWordInv == "Rage")
+						{
+							GetComponent<Player>().removeWord(i);
+							GetComponent<Player>().zenUp();
+
+							rightIdea.Play();
+							levelProgress.currentObstacles++;
+						}
+						else if (tempWordInv == "Happy")
+						{
+							GetComponent<Player>().removeWord(i);
+
+							wrongIdea.Play();
+						}
+						else if (tempWordInv == "Compassion")
+						{
+							GetComponent<Player>().removeWord(i);
+							GetComponent<Player>().zenUp();
+
+							rightIdea.Play();
+							levelProgress.currentObstacles++;
+						}
+					}
+
+					GetComponent<IntroductionInteractions>().startInteraction(selectedObject, tempWordInv);
 				}
 
 			}

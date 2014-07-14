@@ -8,6 +8,7 @@ public class FollowPath : MonoBehaviour
 	public float pathSpeed;
 
 	public bool triggerPath = false;
+	public bool orientToPath;
 
 	// Use this for initialization
 	void Start () 
@@ -21,7 +22,7 @@ public class FollowPath : MonoBehaviour
 		if (triggerPath)
 		{
 			iTween.MoveTo(gameObject, iTween.Hash("path", iTweenPath.GetPath(pathName), "speed", pathSpeed, 
-			                                      "easetype", iTween.EaseType.linear, "orienttopath", true));
+			                                      "easetype", iTween.EaseType.linear, "orienttopath", orientToPath));
 			triggerPath = false;
 		}
 	}

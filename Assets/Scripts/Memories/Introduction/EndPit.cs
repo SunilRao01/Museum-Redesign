@@ -3,45 +3,144 @@ using System.Collections;
 
 public class EndPit : MonoBehaviour 
 {
-	private float progressAlpha = 1;
-	public GUIStyle titleStyle;
+	public int introDelay;
+	
+	public GUIStyle dayStyle;
+	
+	// Alpha variables
+	private float titleFadeAlpha;
+	private float paintingsFadeAlpha;
+	private float obstaclesFadeAlpha;
 
+
+	public float fadeInterval;
+
+	private GameObject cameraObject;
+
+	private LevelInformation levelProgress;
+
+	// Use this for initialization
 	void Start () 
 	{
-	
+		cameraObject = GameObject.Find("Main Camera");
+
+
+		levelProgress = GameObject.Find("Level Information").GetComponent<LevelInformation>();
 	}
 	
-	void Update () 
+	void Update()
 	{
 
 	}
+	
+	IEnumerator fade()
+	{
+		yield return new WaitForSeconds(introDelay);
+		
+		// Fade title in
+		while (titleFadeAlpha < 1)
+		{
+			titleFadeAlpha += 0.02f;
+			yield return new WaitForSeconds(0.02f);
+		}
+		
+		yield return new WaitForSeconds(fadeInterval);
 
+		// Fade title out
+		while (titleFadeAlpha > 0)
+		{
+			titleFadeAlpha -= 0.02f;
+			yield return new WaitForSeconds(0.02f);
+		}
+
+
+
+		yield return new WaitForSeconds(fadeInterval);
+
+		// Fade painting progression in
+		while (paintingsFadeAlpha < 1)
+		{
+			paintingsFadeAlpha += 0.02f;
+			yield return new WaitForSeconds(0.02f);
+		}
+
+		yield return new WaitForSeconds(fadeInterval);
+
+		// Fade paintings progression out
+		while (paintingsFadeAlpha > 0)
+		{
+			paintingsFadeAlpha -= 0.02f;
+			yield return new WaitForSeconds(0.02f);
+		}
+
+
+
+		yield return new WaitForSeconds(fadeInterval);
+		
+		// Fade painting progression in
+		while (obstaclesFadeAlpha < 1)
+		{
+			obstaclesFadeAlpha += 0.02f;
+			yield return new WaitForSeconds(0.02f);
+		}
+		
+		yield return new WaitForSeconds(fadeInterval);
+		
+		// Fade paintings progression out
+		while (obstaclesFadeAlpha > 0)
+		{
+			obstaclesFadeAlpha -= 0.02f;
+			yield return new WaitForSeconds(0.02f);
+		}
+
+		Debug.Log("Should fade!");
+		cameraObject.GetComponent<FadeOut>().fade = true;
+	}
+	
 	void OnGUI()
 	{
-		Color outColor = Color.white;
-		Color inColor = Color.black;
+		// Title
+		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, titleFadeAlpha);
+		
+		Color inColor = new Color(Color.black.r, Color.black.g, Color.black.b, titleFadeAlpha);
+		Color outColor = new Color(Color.white.r, Color.white.g, Color.white.b, titleFadeAlpha);
+		
+		ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 50, (Screen.height/2) - 50, 100, 100), "Memory Complete", 
+		                             dayStyle, outColor, inColor, 1);
 
-		outColor.a = progressAlpha;
-		inColor.a = progressAlpha;
 
-		//ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 50, (Screen.height/2) - 50, 100, 100), "Memory Complete", titleStyle, outColor, inColor, 1);
+		// Painting Progression
+		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, paintingsFadeAlpha);
+		
+		inColor = new Color(Color.black.r, Color.black.g, Color.black.b, paintingsFadeAlpha);
+		outColor = new Color(Color.white.r, Color.white.g, Color.white.b, paintingsFadeAlpha);
+
+		string label1 = "Paintings: " + levelProgress.currentPaintings.ToString() + "/" + levelProgress.totalPaintings.ToString();
+		ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 50, (Screen.height/2) - 50, 100, 100), 
+		                             label1, dayStyle, outColor, inColor, 1);
+
+
+		// Obstacle Progression
+		GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, obstaclesFadeAlpha);
+		
+		inColor = new Color(Color.black.r, Color.black.g, Color.black.b, obstaclesFadeAlpha);
+		outColor = new Color(Color.white.r, Color.white.g, Color.white.b, obstaclesFadeAlpha);
+		
+		string label2 = "Conflicts: " + levelProgress.currentObstacles.ToString() + "/" + levelProgress.totalObstacles.ToString();
+		ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 50, (Screen.height/2) - 50, 100, 100), 
+		                             label2, dayStyle, outColor, inColor, 1);
+		
 	}
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.gameObject.CompareTag("Player"))
+		if (other.gameObject.name == "Player")
 		{
-			progressAlpha = 1;
-			//audio.Play();
+			other.GetComponent<FirstPersonDrifter>().gravity = 0;
+			other.GetComponent<PlayerGUI>().crosshairAlpha = 0;
+			levelProgress.levelComplete = true;
 
-			// TODO: Reduce player's gravity
-			other.GetComponent<FirstPersonDrifter>().gravity = 0.5f;
-			GetComponent<FadeLabel>().enabled = true;
-
-			// TODO: Possible add cool particle effect, child'd to camera/player
-			// (Local transformation/rotation)
-
-			// TODO: Display game title
+			StartCoroutine(fade());
 		}
 	}
 }
