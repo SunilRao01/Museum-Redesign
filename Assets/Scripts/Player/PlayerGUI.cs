@@ -94,6 +94,29 @@ public class PlayerGUI : MonoBehaviour
 			
 			currentWords.color = newColor;
 		}
+
+		if (Input.GetKeyDown(KeyCode.Tab))
+		{
+			if (GetComponent<Player>().gameMenuAlpha == 0)
+			{
+				crosshairAlpha = 0;
+			}
+			else if (GetComponent<Player>().gameMenuAlpha == 1)
+			{
+				crosshairAlpha = 1;
+			}
+		}
+		else if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			if (GetComponent<Player>().exitAlpha == 0)
+			{
+				crosshairAlpha = 0;
+			}
+			else if (GetComponent<Player>().exitAlpha == 1)
+			{
+				crosshairAlpha = 1;
+			}
+		}
 	}
 
 	void OnGUI()

@@ -23,7 +23,6 @@ public class MouseSelection : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		// TODO: Figure out a way to hide mouse when needed and while still moving (aka the end pit)
 		if (playerDrifter.isMoving && !levelProgress.levelComplete)
 		{
 			lockOn = false;

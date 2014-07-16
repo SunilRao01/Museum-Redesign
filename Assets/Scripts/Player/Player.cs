@@ -39,13 +39,16 @@ public class Player : MonoBehaviour
 	void Awake () 
 	{
 		currentWords = new ArrayList();
+
+		Screen.lockCursor = true;
+		Screen.showCursor = false;
 	}
 
 	void Start()
 	{
-		addWord("Happy");
-		addWord("Rage");
-		addWord("Compassion");
+		//addWord("Happy");
+		//addWord("Rage");
+		//addWord("Compassion");
 	}
 	
 	void OnGUI()
@@ -73,7 +76,11 @@ public class Player : MonoBehaviour
 			Screen.showCursor = false;
 
 			Time.timeScale = 1;
-			GetComponent<PlayerGUI>().crosshairAlpha = 1;
+
+			if (Application.loadedLevelName != "HouseHub" && GetComponent<PlayerGUI>() != null)
+			{
+				GetComponent<PlayerGUI>().crosshairAlpha = 1;
+			}
 		}
 		if (GUI.Button(new Rect((Screen.width/2) - 60, (Screen.height/2) - 30, 120, 60), "Options", buttonStyle))
 		{
@@ -82,8 +89,6 @@ public class Player : MonoBehaviour
 		if (GUI.Button(new Rect((Screen.width/2) - 60, (Screen.height/2) - 30 + 100, 120, 60), "Exit", buttonStyle))
 		{
 			Application.Quit();
-
-		
 		}
 
 		// TITLE
@@ -148,22 +153,34 @@ public class Player : MonoBehaviour
 		outColor.a = progressionAlpha;
 
 		// Progression Grid
-		for (int k = 0; k < 3; k++)
+		for (int k = 0; k < (PlayerPrefs.GetInt("LevelsComplete")); k++)
 		{
-			// Box
-			GUI.Box(new Rect((Screen.width/2) - 180, (Screen.height/2) - 180 + (yOffset * k), 470, 128), GUIContent.none);
+			string level = PlayerPrefs.GetString("Game_TotalProgress");
 
-			// Percentage Label
-			ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 170, (Screen.height/2) - 170 + (yOffset * k), 100, 100), "0%", progressionPercentageStyle, outColor, inColor, 1);
+			if (level[0] == '1')
+			{
+				// Box
+				GUI.Box(new Rect((Screen.width/2) - 180, (Screen.height/2) - 180 + (yOffset * k), 470, 128), GUIContent.none);
 
-			// Memory Label
-			ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) + 60, (Screen.height/2) - 190 + (yOffset * k), 100, 100), "[Memory Name]", progressionNameStyle, outColor, inColor, 1);
+				// Percentage Label
+				ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) - 170, (Screen.height/2) - 170 + (yOffset * k), 100, 100), 
+				                             PlayerPrefs.GetInt("Memory_Introduction_PercentageComplete").ToString() + "%", progressionPercentageStyle, 
+				                             	outColor, inColor, 1);
 
-			// Painting Progression Label
-			ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) + 60, (Screen.height/2) - 200 + (yOffset * k), 100, 100), "X/X Paintings", progressionPaintingStyle, outColor, inColor, 1);
+				// Memory Label
+				ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) + 60, (Screen.height/2) - 190 + (yOffset * k), 100, 100), "Prologue: School", progressionNameStyle, outColor, inColor, 1);
 
-			// Obstacle Progression Label
-			ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) + 60, (Screen.height/2) - 210 + (yOffset * k), 100, 100), "X/X Obstacles", progressionObstacleStyle, outColor, inColor, 1);
+				// Painting Progression Label
+				ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) + 60, (Screen.height/2) - 200 + (yOffset * k), 100, 100), 
+				                             (PlayerPrefs.GetInt("Memory_Introduction_Paintings").ToString()) + "/" + (PlayerPrefs.GetInt("Memory_Introduction_TotalPaintings").ToString()) + " Paintings", 
+				                             	progressionPaintingStyle, outColor, inColor, 1);
+
+				// Obstacle Progression Label
+				ShadowAndOutline.DrawOutline(new Rect((Screen.width/2) + 60, (Screen.height/2) - 210 + (yOffset * k), 100, 100),
+				                             (PlayerPrefs.GetInt("Memory_Introduction_Obstacles").ToString()) + "/" + (PlayerPrefs.GetInt("Memory_Introduction_TotalObstacles").ToString()) + " Obstacles",
+				                             	progressionObstacleStyle, outColor, inColor, 1);
+
+			}
 		}
 
 	}
@@ -178,8 +195,6 @@ public class Player : MonoBehaviour
 		// Exit Menu
 		if (Input.GetKeyDown(KeyCode.Escape) && exitAlpha == 0)
 		{
-
-
 			exitAlpha = 1;
 
 			// Enable game
@@ -193,7 +208,6 @@ public class Player : MonoBehaviour
 			Screen.showCursor = true;
 
 			Time.timeScale = 0;
-			GetComponent<PlayerGUI>().crosshairAlpha = 0;
 		}
 		else if (Input.GetKeyDown(KeyCode.Escape) && exitAlpha == 1)
 		{
@@ -211,7 +225,6 @@ public class Player : MonoBehaviour
 			Screen.showCursor = false;
 
 			Time.timeScale = 1;
-			GetComponent<PlayerGUI>().crosshairAlpha = 1;
 		}
 
 		if (Input.GetKeyDown(KeyCode.Tab))
@@ -229,13 +242,9 @@ public class Player : MonoBehaviour
 				transform.Find("Main Camera").GetComponent<MouseLook>().enabled = false;
 				transform.Find("Main Camera").GetComponent<HeadBob>().enabled = false;
 
-				if (Application.loadedLevelName == "HouseHub")
-				{
-					GetComponent<HubworldPlayer>().mouseAlpha = 0;
-				}
-
 				Time.timeScale = 0;
-				GetComponent<PlayerGUI>().crosshairAlpha = 0;
+
+
 			}
 			else
 			{
@@ -251,14 +260,16 @@ public class Player : MonoBehaviour
 				transform.Find("Main Camera").GetComponent<MouseLook>().enabled = true;
 				transform.Find("Main Camera").GetComponent<HeadBob>().enabled = true;
 
-				if (Application.loadedLevelName == "HouseHub")
-				{
-					GetComponent<HubworldPlayer>().mouseAlpha = 1;
-				}
-
 				Time.timeScale = 1;
-				GetComponent<PlayerGUI>().crosshairAlpha = 1;
+
+
 			}
+		}
+
+		// TEMP: This is for debug mode only
+		if (Input.GetKeyDown(KeyCode.Delete))
+		{
+			PlayerPrefs.DeleteAll();
 		}
 	}
 

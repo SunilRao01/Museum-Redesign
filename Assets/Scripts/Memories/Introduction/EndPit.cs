@@ -140,6 +140,23 @@ public class EndPit : MonoBehaviour
 			other.GetComponent<PlayerGUI>().crosshairAlpha = 0;
 			levelProgress.levelComplete = true;
 
+			// Update saved level information
+			if (Application.loadedLevelName == "IntroductionMemory")
+			{
+				PlayerPrefs.SetInt("Memory_Introduction_Paintings", levelProgress.currentPaintings);
+				PlayerPrefs.SetInt("Memory_Introduction_TotalPaintings", levelProgress.totalPaintings);
+				PlayerPrefs.SetInt("Memory_Introduction_Obstacles", levelProgress.currentObstacles);
+				PlayerPrefs.SetInt("Memory_Introduction_TotalObstacles", levelProgress.totalObstacles);
+
+				int totalPercentage = Mathf.RoundToInt( ((levelProgress.currentObstacles + levelProgress.currentPaintings) / (levelProgress.totalPaintings + levelProgress.totalObstacles)) * 100);
+				PlayerPrefs.SetInt("Memory_Introduction_PercentageComplete", totalPercentage);
+
+				// Update global game information (for game menu)
+				PlayerPrefs.SetString("Game_TotalProgress", "1000000");
+
+				PlayerPrefs.SetInt("LevelsComplete", 1);
+			}
+
 			StartCoroutine(fade());
 		}
 	}
